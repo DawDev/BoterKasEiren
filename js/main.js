@@ -67,18 +67,28 @@ function checkWin() {
     });
 }
 
+function checkTie() {
+    let tie = true;
+    for ( let i = 0; i <= board.length; i++ ){
+        const t = board[i].innerText;
+        if ( t == '' ) 
+            tie = false;
+
+    }
+    alert(tie);
+}
+
 function setTile(e) {
     if ( !won ) {
-
         const tile = e.target;
         if ( tile.innerText == '' ) {
-    
             if ( turn % 2 == 0 )
                 tile.innerText = xChar;
             else 
                 tile.innerText = oChar;
             turn++;
             checkWin();
+            checkTie();
         }
 
     }
