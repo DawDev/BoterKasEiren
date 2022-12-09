@@ -1,8 +1,11 @@
 const playButton = document.querySelector('.start-button');
 const startScreen = document.querySelector('.start-screen-wrapper');
 const gameScreen = document.querySelector('.game-wrapper');
+const tieScreen = document.querySelector('.tied');
+const winScreen = document.querySelector('.won');
+
 // get board as an array rather than a nodelist
-const board = [...document.querySelectorAll('.tile')]; 
+const board = [...document.querySelectorAll('.tile')];
 
 // Player 'icons'
 const xChar = '✖';
@@ -10,7 +13,6 @@ const oChar = '◉';
 
 let turn = 0;
 
-let won = false;
 
 
 // Set a mouseclick EventListener on for everytile
@@ -36,6 +38,12 @@ startScreen.addEventListener('animationend', () => {
 
 });
 
+
+gameScreen.addEventListener('animationend', (event) => {
+    if ( event.animationName == 'fade-out-view' )
+        gameScreen.style.display = 'none';
+})
+
 // win conditions
 const winConds = [
     [0, 1, 2],
@@ -50,6 +58,8 @@ const winConds = [
 
 
 function checkWin() {
+    let won = false;
+    let player = '';
     winConds.forEach(winCondition => {
 
         const wc = winCondition;
@@ -59,39 +69,66 @@ function checkWin() {
 
         if ( t0 == t1 && t0 == t2 && t0 != '' ) {
             won = true;
+            player = t0
             board[wc[0]].classList.add('win');
             board[wc[1]].classList.add('win');
             board[wc[2]].classList.add('win');
         }
 
     });
+    return [won, player];
 }
 
 function checkTie() {
     let tie = true;
-    for ( let i = 0; i <= board.length; i++ ){
-        const t = board[i].innerText;
+    board.forEach(tile => {
+        const t = tile.innerText;
         if ( t == '' ) 
             tie = false;
-
-    }
-    alert(tie);
+    })
+    return tie;
 }
 
 function setTile(e) {
-    if ( !won ) {
-        const tile = e.target;
-        if ( tile.innerText == '' ) {
-            if ( turn % 2 == 0 )
-                tile.innerText = xChar;
-            else 
-                tile.innerText = oChar;
-            turn++;
-            checkWin();
-            checkTie();
+    const tile = e.target;
+    if ( tile.innerText == '' ) {
+        if ( turn % 2 == 0 )
+            tile.innerText = xChar;
+        else 
+            tile.innerText = oChar;
+        turn++;
+        const winState = checkWin()
+        if ( winState[0] ) {
+            onWin( winState[1] );
+        } else if ( checkTie() ) 
+        {
+            onTie();
         }
-
     }
 
+}
+
+function onWin( player ) {
+    gameScreen.classList.remove('game-wrapper-invis');
+    gameScreen.classList.add('fade-out');
+    
+    gameScreen.addEventListener('animationend', () => {
+        winScreen.querySelector('h1').innerText = `${player} Won!`
+        winScreen.classList.add('fade-in');
+        winScreen.style.animationDelay = '1s';
+        winScreen.style.display = 'block';
+    })
+    
+}
+
+function onTie() {
+    gameScreen.classList.remove('game-wrapper-invis');
+    gameScreen.classList.add('fade-out');
+    
+    gameScreen.addEventListener('animationend', () => {
+        tieScreen.classList.add('fade-in');
+        tieScreen.style.animationDelay = '1s';
+        tieScreen.style.display = 'block';
+    })
 }
 

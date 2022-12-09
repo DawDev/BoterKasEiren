@@ -1,11 +1,15 @@
 .game-wrapper {
-    filter: opacity(0);
+
     width: 100vw;
     height: 100vh;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.game-wrapper-invis {
+    filter: opacity(0);
     display: none;
 }
 
@@ -32,6 +36,12 @@
 @keyframes fade-in-view {
     100% {
         filter: opacity(1);
+    }
+}
+
+@keyframes fade-out-view {
+    100% {
+        filter: opacity(0);
     }
 }
 
@@ -91,18 +101,19 @@ body {
 }
 
 .welcome {
-    padding: 400px 0 0;
+    padding: 500px 0 0;
     font-family: monospace;
     font-size: 100px;
 }
 
 .ttt-welcome {
+    /* Tic Tac Toe text on start screen */
     color: red;
 }
 
-.ttt-welcome > span:hover {
+/* .ttt-welcome > span:hover {
     animation: shake 1s infinite;
-}
+} */
 
 .start-button {
     margin: 100px auto;
@@ -135,4 +146,28 @@ body {
 .fade-in {
     display: flex;
     animation: fade-in-view 1s forwards;
+}
+
+.fade-out {
+    animation: fade-out-view 1s forwards;
+}
+
+.tied, .won {
+    display: none;
+    filter: opacity(0);
+    font-family: monospace;
+    font-size: 80px;
+
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+}
+
+.won h1, .tied h1{
+    padding: 500px 0 0;
+}
+
+.won h3, .tied h3 {
+    padding: 20px 0 0;
+    font-size: 45px;
 }
